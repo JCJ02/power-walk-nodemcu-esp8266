@@ -8,4 +8,4 @@
 - Scans an RFID card to get its unique ID.
 - Sends battery data & RFID UID to the server via an HTTP POST request.
 - Receives a response:
-  - If "Yes", access is granted. Otherwise, print the response.
+ - If "Yes", access is granted. Otherwise, print the response.
