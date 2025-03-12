@@ -37,7 +37,7 @@ int battery = 0; // Variable to store the sound value
 float previousVoltage = 0; 
 
 const int relay = 16;
-const char* serverName = "https://192.168.100.5/powerwalksystem/get_data.php";
+const char* serverName = "https://192.168.100.71/powerwalksystem/server.php";
 unsigned long timerStart = 0; // To store the start time of the timer
 unsigned long timerDuration = 10000; // Timer duration in milliseconds (e.g., 10000 ms = 10 seconds)
 bool timerStarted = false; // Flag to check if the timer was started
