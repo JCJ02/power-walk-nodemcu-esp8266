@@ -1,6 +1,3 @@
-/*
- *  Created by TheCircuit
-*/
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -16,13 +13,12 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 #include <SPI.h>
 #include <MFRC522.h>
 
-MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance.
+MFRC522 mfrc522(SS_PIN, RST_PIN); // CREATE MFRC522 INSTANCE.
 int statuss = 0;
 int out = 0;
 
 #include <SPI.h>
 #include <Wire.h>
-
 
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
@@ -32,23 +28,22 @@ int out = 0;
 const char* ssid = "Jacobe Family";
 const char* password = "b@w@lk0m0n3k";  
 
-
-int battery = 0; // Variable to store the sound value
+int battery = 0; // VARIABLE TO STORE THE SOUND VALUE
 float previousVoltage = 0; 
 
 const int relay = 16;
-const char* serverName = "https://192.168.100.71/powerwalksystem/server.php";
-unsigned long timerStart = 0; // To store the start time of the timer
-unsigned long timerDuration = 10000; // Timer duration in milliseconds (e.g., 10000 ms = 10 seconds)
-bool timerStarted = false; // Flag to check if the timer was started
-unsigned long elapsedTime = 0; // Variable to store elapsed time
+const char* serverName = "https://192.168.100.5/powerwalksystem/server.php";
+unsigned long timerStart = 0; // TO STORE THE START TIME OF THE TIMER
+unsigned long timerDuration = 10000; // TIMER DURATION IN MILLISECONDS (E.G., 10000 MS = 10 SECONDS)
+bool timerStarted = false; // FLAG TO CHECK IF THE TIMER WAS STARTED
+unsigned long elapsedTime = 0; // VARIABLE TO STORE ELAPSED TIME
 
-// const int batteryPin = A0; // ADC pin connected to battery voltage
-// const float fullBatteryVoltage = 12.8; // Example for a Li-ion battery
+// const int batteryPin = A0; // ADC PIN CONNECTED TO BATTERY VOLTAGE
+// const float fullBatteryVoltage = 12.8; // EXAMPLE FOR A LI-ION BATTERY
 
-const int batteryPin = A0; // ADC pin connected to battery voltage
-const float voltageDividerRatio = 4.78; // Adjust this based on your voltage divider circuit
-const float referenceVoltage = 3.3; // NodeMCU ADC reference voltage
+const int batteryPin = A0; // ADC PIN CONNECTED TO BATTERY VOLTAGE
+const float voltageDividerRatio = 4.78; // ADJUST THIS BASED ON YOUR VOLTAGE DIVIDER CIRCUIT
+const float referenceVoltage = 3.3; // NodeMCU ADC REFERENCE VOLTAGE
 
 // float getBatteryPercentage(float voltage) {
 //     if (voltage >= 12.6) return 100;
@@ -65,39 +60,39 @@ const float referenceVoltage = 3.3; // NodeMCU ADC reference voltage
 // }
 
 float getBatteryPercentage(float voltage) {
-    // Voltage-to-capacity mapping for a 12V lead-acid battery
+    // VOLTAGE TO CAPACITY MAPPING FOR a 12V LEAD-ACID BATTERY
     const float voltagePoints[] = {10.5, 11.31, 11.58, 11.75, 11.9, 12.06, 12.2, 12.32, 12.42, 12.5, 12.6};
     const float capacityPoints[] = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-    // Ensure the voltage is within the valid range
-    if (voltage <= voltagePoints[0]) return 0; // Below minimum voltage
-    if (voltage >= voltagePoints[10]) return 100; // Above maximum voltage
+    // ENSURE THE VOLTAGE IS WITHIN THE VALID RANGE
+    if (voltage <= voltagePoints[0]) return 0; // BBELOW MINIMUM VOLTAGE
+    if (voltage >= voltagePoints[10]) return 100; // ABOVE MAXIMUM VOLTAGE
 
-    // Find the interval where the voltage lies
+    // FIND THE INTERVAL WHERE THE VOLTAGE LIES
     int i = 0;
     while (voltage > voltagePoints[i + 1]) {
         i++;
     }
 
-    // Linear interpolation
+    // LINEAR INTERPOLATION
     float percentage = capacityPoints[i] + (voltage - voltagePoints[i]) * (capacityPoints[i + 1] - capacityPoints[i]) / (voltagePoints[i + 1] - voltagePoints[i]);
 
     return percentage;
 }
 
-// Add the averaging function here
+// ADD THE AVERAGING FUNCTION HERE
 int getAverageADCReading(int pin, int samples = 10) {
     int sum = 0;
     for (int i = 0; i < samples; i++) {
         sum += analogRead(pin);
-        delay(100); // Short delay between readings
+        delay(300); // SHORT DELAY BETWEEN READINGS
     }
     return sum / samples;
 }
 
 void setup() 
 {
-  Serial.begin(115200);   // Initiate a serial communication
+  Serial.begin(115200); // INITIATE A SERIAL COMMUNICATION
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
   WiFi.begin(ssid, password);
@@ -113,8 +108,8 @@ void setup()
   Serial.println(WiFi.localIP());
 
   delay(3000);
-  SPI.begin(); // Initiate  SPI bus
-  mfrc522.PCD_Init(); // Initiate MFRC522
+  SPI.begin(); // INITIATE SPI BUS
+  mfrc522.PCD_Init(); // INITIATE MFRC522
 }
 
 void loop() 
@@ -129,7 +124,7 @@ void loop()
     HTTPClient https;
     https.begin(*client, serverName);
 
-    // Specify content-type header
+    // SPECIFY CONTENT-TYPE HEADER
     https.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
     int adcReading = getAverageADCReading(batteryPin);
@@ -143,30 +138,23 @@ void loop()
     // Serial.print(batteryPercentage);
     // Serial.println("%");
 
-
-    // Calculate electricity generated (if voltage increased)
+    // CALCULATE ELECTRICITY GENERATED (IF VOLTAGE INCREASED)
     float electricityGenerated = 0.0;
     if (batteryVoltage > previousVoltage) {
-      electricityGenerated = batteryVoltage - previousVoltage; // Voltage increase (e.g., 0.1V)
+      electricityGenerated = batteryVoltage - previousVoltage; // VOLTAGE INCREASE (E.G., 0.1V)
     }
-    previousVoltage = batteryVoltage; // Update previous voltage
-
+    previousVoltage = batteryVoltage; // UPDATE PREVIOUS VOLTAGE
 
     // int adcReading = analogRead(batteryPin); 
-
-    // float batteryVoltage = (adcReading * 12.0) / 1023; // Assuming 3.3V reference voltage
-
+    // float batteryVoltage = (adcReading * 12.0) / 1023; // ASSUMING 3.3V REFERENCE VOLTAGE
     // float batteryPercentage = (batteryVoltage / fullBatteryVoltage) * 100;
 
-
-
-
-    // Look for new cards
+    // LOOK FOR NEW CARDS
     if ( ! mfrc522.PICC_IsNewCardPresent()) 
     {
       return;
     }
-    // Select one of the cards
+    // SELECT ONE OF THE CARDS
     if ( ! mfrc522.PICC_ReadCardSerial()) 
     {
       return;
@@ -181,7 +169,7 @@ void loop()
       decimalContent.concat(String(mfrc522.uid.uidByte[i], DEC));
       
     }
-    content.toUpperCase(); // Ensure case consistency (HEX is case-insensitive)
+    content.toUpperCase(); // ENSURE CASE CONSISTENCY (HEX IS CASE-INSENSITIVE)
 
     // String elect = String(raw_adc);
     // String elect = String(adcReading);
@@ -191,11 +179,11 @@ void loop()
     // String co2 = String(content);
     String co2 = String(decimalContent);
 
-    // Prepare your HTTP POST request data
+    // PREPARE YOUR HTTP POST REQUEST DATA
     String httpRequestData = "&battery=" + batt + "&uid=" + co2 + "&battVol=" + bv + "&electGen=" + eg;
 
-    // You can comment the httpRequestData variable above
-    // then, use the httpRequestData variable below (for testing purposes without the BME280 sensor)
+    // YOU CAN COMMENT THE httpRequestData VARIABLE ABOVE
+    // THEN, USE THE httpRequestData VARIABLE BELOW (FOR TESTING PURPOSES WITHOUT THE BME280 SENSOR)
     //String httpRequestData = "api_key=tPmAT5Ab3j7F9&sensor=BME280&location=Office&value1=24.75&value2=49.54&value3=1005.14";
     https.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -211,7 +199,7 @@ void loop()
 
     https.end();
 
-    // Check if the UID is "123456"
+    // CHECK IF THE UID IS "123456"
     if (payload=="Yes") {
 
       Serial.println("Yes");
