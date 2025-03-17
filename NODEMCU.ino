@@ -85,7 +85,7 @@ int getAverageADCReading(int pin, int samples = 10) {
     int sum = 0;
     for (int i = 0; i < samples; i++) {
         sum += analogRead(pin);
-        delay(300); // SHORT DELAY BETWEEN READINGS
+        delay(1000); // SHORT DELAY BETWEEN READINGS
     }
     return sum / samples;
 }
@@ -201,12 +201,9 @@ void loop()
 
     // CHECK IF THE UID IS "123456"
     if (payload=="Yes") {
-
       Serial.println("Yes");
-
     } else{
       Serial.println(payload);
-
       delay(1000);
       Serial.flush();
     }
